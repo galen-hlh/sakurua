@@ -17,6 +17,14 @@ export default class Nav extends React.Component {
                                 <li className="navbar-nav-item"><a href="/">MySQL</a></li>
                                 <li className="navbar-nav-item"><a href="/">PHP</a></li>
                                 <li className="navbar-nav-item"><a href="/">Micro</a></li>
+                                <li className="navbar-nav-item search">
+                                    <form action="">
+                                        <input className="search-input" type="text" placeholder="搜索"/>
+                                        <a className="search-btn" href="/">
+                                            <i className="fa fa-search"/>
+                                        </a>
+                                    </form>
+                                </li>
                             </ul>
                         </div>
                     </div>
