@@ -3,6 +3,10 @@ import './navbar.scss';
 import '../../common/common.scss';
 
 export default class Nav extends React.Component {
+
+    search (){
+        alert(1);
+    }
     render() {
         return (
             <div className="navbar">
@@ -20,7 +24,7 @@ export default class Nav extends React.Component {
                                 <li className="navbar-nav-item search">
                                     <form action="">
                                         <input className="search-input" type="text" placeholder="搜索"/>
-                                        <a className="search-btn" href="/">
+                                        <a className="search-btn" onClick={this.search}>
                                             <i className="fa fa-search"/>
                                         </a>
                                     </form>
