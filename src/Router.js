@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import Home from './components/home/Home';
-import Detail from './components/markdown/Markdown';
+import Home from './components/home/home';
+import Detail from './components/markdown/markdown';
 
 
 const BasicRoute = () => (
