@@ -5,7 +5,7 @@
  * @returns {*}
  */
 export function handleUrl(url, params) {
-    if (params) {
+    if (params && Object.keys(params).length !== 0) {
         let paramsArray = [];
         Object.keys(params).forEach(key => paramsArray.push(key + '=' + encodeURIComponent(params[key])));
         if (url.search(/\?/) === -1) {

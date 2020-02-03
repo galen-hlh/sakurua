@@ -1,79 +1,74 @@
 import React from 'react';
 import './list-container.scss';
 import '../../fonts/fontawesome/scss/font-awesome.scss';
+import HttpRequest from "../../helper/HttpRequest";
+import {BASE_URL} from "../../config/config";
 
 export default class ListContainer extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            list: [],
+            total_counts: 0,
+            total_pages: 0,
+            current_page: 1
+        };
+    }
+
+    componentWillMount() {
+        let _self = this;
+        HttpRequest.get(BASE_URL + "/article").then(function (resp) {
+            _self.setState(resp.data);
+        });
+    }
+
+
+    static getDetailUrl(id) {
+        return "/detail/" + id;
+    }
+
+    static renderAvatar(id, avatar) {
+        if (avatar) {
+            return (<a className="wrap-img" href={ListContainer.getDetailUrl(id)}>
+                <img className="img-blur-done"
+                     src={"//" + avatar}
+                     alt="120"/>
+            </a>)
+        }
+        return ('');
+    }
+
     render() {
+        let list = this.state.list;
         return (
             <div id="list-container">
                 <ul className="note-list">
-                    <li className="have-img">
-                        <a className="wrap-img" href="/detail">
-                            <img className="img-blur-done"
-                                 src="//upload-images.jianshu.io/upload_images/16383436-17f9626f4a5beb3f?imageMogr2/auto-orient/strip|imageView2/1/w/360/h/240"
-                                 alt="120"/>
-                        </a>
-                        <div className="content">
-                            <a className="title"  href="/detail">绘画艺术丨今日教程：一株美丽的水仙花</a>
-                            <p className="abstract">
-                                彩铅教程 : 水仙花~ 画材 纸：获多福细纹水彩纸 笔：辉柏嘉绿盒60色 绘图流程解读 水仙线条图↓↓↓ 1、构图定位，先用可擦中性笔定下水仙花...
-                            </p>
-                            <div className="meta">
-                                <a className="nickname"  href="/">教画画的小然</a>
-                                <a  href="/">
-                                    <i className="fa fa-comment"/> 5
-                                </a>
-                                <span><i className="fa fa-heart"/> 91</span>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div className="content">
-                            <a className="title" href="/detail">绘画艺术丨今日教程：一株美丽的水仙花</a>
-                            <p className="abstract">
-                                彩铅教程 : 水仙花~ 画材 纸：获多福细纹水彩纸 笔：辉柏嘉绿盒60色 绘图流程解读 水仙线条图↓↓↓ 1、构图定位，先用可擦中性笔定下水仙花...
-                            </p>
-                            <div className="meta">
-                                <a className="nickname"  href="/detail">教画画的小然</a>
-                                <a  href="/">
-                                    <i className="fa fa-comment"/> 5
-                                </a>
-                                <span><i className="fa fa-heart"/> 91</span>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div className="content">
-                            <a className="title" href="/detail">绘画艺术丨今日教程：一株美丽的水仙花</a>
-                            <p className="abstract">
-                                彩铅教程 : 水仙花~ 画材 纸：获多福细纹水彩纸 笔：辉柏嘉绿盒60色 绘图流程解读 水仙线条图↓↓↓ 1、构图定位，先用可擦中性笔定下水仙花...
-                            </p>
-                            <div className="meta">
-                                <a className="nickname" href="/detail">教画画的小然</a>
-                                <a  href="/">
-                                    <i className="fa fa-comment"/> 5
-                                </a>
-                                <span><i className="fa fa-heart"/> 91</span>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div className="content">
-                            <a className="title" href="/detail">绘画艺术丨今日教程：一株美丽的水仙花</a>
-                            <p className="abstract">
-                                彩铅教程 : 水仙花~ 画材 纸：获多福细纹水彩纸 笔：辉柏嘉绿盒60色 绘图流程解读 水仙线条图↓↓↓ 1、构图定位，先用可擦中性笔定下水仙花...
-                            </p>
-                            <div className="meta">
-                                <a className="nickname" href="/detail">教画画的小然</a>
-                                <a  href="/">
-                                    <i className="fa fa-comment"/> 5
-                                </a>
-                                <span><i className="fa fa-heart"/> 91</span>
-                            </div>
-                        </div>
-                    </li>
+                    {
+                        list.map(function (row) {
+                            return (
+                                <li className="have-img">
+                                    {ListContainer.renderAvatar(row['id'], row['image'])}
+                                    <div className="content">
+                                        <a className="title" href={ListContainer.getDetailUrl(row['id'])}>
+                                            {row['title']}
+                                        </a>
+                                        <p className="abstract">
+                                            {row['description']}
+                                        </p>
+                                        <div className="meta">
+                                            <a className="nickname"
+                                               href={ListContainer.getDetailUrl(row['id'])}>{row['publisher_name']}</a>
+                                            <a href="/">
+                                                <i className="fa fa-comment"/> {row['reply_num']}
+                                            </a>
+                                            <span><i className="fa fa-heart"/> {row['like_num']}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            )
+                        })
+                    }
                 </ul>
             </div>
         )

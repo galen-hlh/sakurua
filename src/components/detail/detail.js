@@ -2,14 +2,62 @@ import React, {Component} from 'react'
 import Nav from '../navbar/navbar'
 import {Col, Row} from 'react-flexbox-grid';
 import './detail.scss';
+import HttpRequest from "../../helper/HttpRequest";
+import {BASE_URL} from "../../config/config";
+import marked from 'marked';
+import Prism from 'prismjs';
 
 export default class Detail extends Component {
 
-    componentWillMount() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            info: {}
+        };
+    }
+
+    UNSAFE_componentWillMount() {
+        let _this = this;
+        let id = this.props.match.params.id;
+        HttpRequest.get(BASE_URL + "/article/" + id).then(function (resp) {
+            _this.setState({info: resp.data.info});
+            Prism.highlightAll();
+        });
+    }
+
+    componentDidMount() {
+        // setTimeout(function () {
+        //     Prism.highlightAll()
+        // },2000);
 
     }
 
+
+    static renderContent(val) {
+        if (val) {
+            // loadLanguages(['html', 'css', 'js', 'php']);
+            let html = marked(val);
+            let domTree = document.createElement("div");
+            domTree.innerHTML = html;
+            // let doms = domTree.getElementsByTagName('code');
+            // for (let i=0; i < doms.length; i++){
+            //     let item = doms[i];
+            //     let languages = item.className.split('-');
+            //     if (languages.length === 2) {
+            //         try{
+            //             doms[i].innerHTML = Prism.highlight(item.textContent, Prism.languages[languages[1]], languages[1]);
+            //         }catch (e) {
+            //             continue;
+            //         }
+            //     }
+            // }
+            return domTree.innerHTML;
+        }
+        return '';
+    }
+
     render() {
+        let row = this.state.info;
         return (
             <div className="bg-f9f9f9">
                 <Nav/>
@@ -17,30 +65,35 @@ export default class Detail extends Component {
                     <Row className="margin-top-20">
                         <Col xs={16} className="main bg-fff">
                             <section className="article">
-                                <h1 className="title">我干了一件羞于启口的事</h1>
+                                <h1 className="title">{row.title}</h1>
                                 <div className="author-info">
                                     <a href="/" className="author-img">
                                         <img
-                                            src="https://upload.jianshu.io/users/upload_avatars/8930196/c503c9f8-6f20-4797-8073-1f83dcf2f413.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/96/h/96/format/webp"
+                                            src={"//" + row['publisher_avatar']}
                                             alt="header"/>
                                     </a>
-                                    <div style={{"margin-left": "8px"}}>
+                                    <div style={{marginLeft: "8px"}}>
                                         <div className="author-name">
-                                            <span>用水点烟</span>
+                                            <span>{row['publisher_name']}</span>
                                         </div>
                                         <div className="author-desc">
                                             <span>2019-08-09 12:12 </span>
-                                            <span>字数:541</span>
-                                            <span>阅读数:111</span>
+                                            <span>字数:{row['words_num']}</span>
+                                            <span>阅读数:{row['view_num']}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <article>
+                                <article className="for-container">
+                                    <div className="for-panel for-editor-preview">
+                                        <div className="for-preview for-markdown-preview"
+                                             dangerouslySetInnerHTML={{__html: Detail.renderContent(row['content'])}}>
 
+                                        </div>
+                                    </div>
                                 </article>
                             </section>
                         </Col>
-                        <Col xs={7} xsOffset={1} className="aside" style={{marginLeft: "1%",paddingTop:0}}>
+                        <Col xs={7} xsOffset={1} className="aside" style={{marginLeft: "1%", paddingTop: 0}}>
                             <div className="recommended">
                                 <section>
                                     <h3>推荐阅读</h3>

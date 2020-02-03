@@ -10,7 +10,6 @@ export default class HttpRequest extends Component {
         return fetch(handleUrl(url, params), {
             method: 'GET',
             headers: headers,
-            mode: 'no-cors'
         })
             .then((response) => {
                 return response.json()
