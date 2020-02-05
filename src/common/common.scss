@@ -22,6 +22,10 @@ body{
   margin: 0;
 }
 
+body, html {
+  height: 100%;
+}
+
 .clearfix {
   *zoom: 1;
 
@@ -45,4 +49,12 @@ body{
 
 .bg-f9f9f9{
   background-color: #f9f9f9;
+}
+
+*, :after, :before {
+  box-sizing: border-box;
+}
+
+#root{
+  height: 100%;
 }

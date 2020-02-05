@@ -25,20 +25,13 @@ export default class Detail extends Component {
         });
     }
 
-    componentDidMount() {
-        // setTimeout(function () {
-        //     Prism.highlightAll()
-        // },2000);
-
-    }
-
 
     static renderContent(val) {
         if (val) {
             // loadLanguages(['html', 'css', 'js', 'php']);
-            let html = marked(val);
-            let domTree = document.createElement("div");
-            domTree.innerHTML = html;
+            // let html = marked(val);
+            // let domTree = document.createElement("div");
+            // domTree.innerHTML = html;
             // let doms = domTree.getElementsByTagName('code');
             // for (let i=0; i < doms.length; i++){
             //     let item = doms[i];
@@ -51,7 +44,8 @@ export default class Detail extends Component {
             //         }
             //     }
             // }
-            return domTree.innerHTML;
+            // return domTree.innerHTML;
+            return marked(val);
         }
         return '';
     }

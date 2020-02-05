@@ -1,21 +1,42 @@
 import {Component} from 'react'
-import {handleUrl} from './Helper'
+import {urlHandler, formDataHandler, errorCodeHandler} from './Helper'
 
 export default class HttpRequest extends Component {
+
     static get = (url, params = {}, newHeaders = {}) => {
         let headers = {};
-        let baseHeaders = {};
-        Object.assign(headers, baseHeaders, newHeaders);
+        Object.assign(headers, newHeaders);
 
-        return fetch(handleUrl(url, params), {
+        return fetch(urlHandler(url, params), {
             method: 'GET',
             headers: headers,
         })
             .then((response) => {
+
                 return response.json()
+            }).then(function (response) {
+                errorCodeHandler(response.code, response.msg);
+                return response;
             })
+            .catch((error) => {
+                return error
+            })
+    };
+
+    static post = (url, params = {}, newHeaders = {}) => {
+        let headers = {};
+        Object.assign(headers, newHeaders);
+
+        return fetch(urlHandler(url), {
+            method: 'POST',
+            headers: headers,
+            body: formDataHandler(params)
+        })
             .then((response) => {
-                return response
+                return response.json();
+            }).then(function (response) {
+                errorCodeHandler(response.code, response.msg);
+                return response;
             })
             .catch((error) => {
                 return error
