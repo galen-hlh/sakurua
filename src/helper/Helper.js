@@ -1,4 +1,5 @@
 import {REQUEST_SUCCESS_CODE, USER_NOT_LOGIN_CODE} from "../config/config";
+import {notification, message} from 'antd';
 
 /**
  * 拼接get请求的字段
@@ -39,9 +40,52 @@ export function formDataHandler(params) {
  */
 export function errorCodeHandler(code, msg) {
     if (code !== REQUEST_SUCCESS_CODE) {
-        alert(msg);
+        Notice.open(msg);
     }
     if (code === USER_NOT_LOGIN_CODE) {
-        alert(msg);
+        Notice.open(msg);
     }
+}
+
+/**
+ * 全局提示框
+ */
+export class Tips {
+    static init() {
+        message.config({
+            top: 100,
+            duration: 20,
+            maxCount: 5,
+        });
+    }
+
+    static info(msg) {
+        this.init();
+        message.info(msg);
+    }
+
+    static warning(msg) {
+        this.init();
+        message.warning(msg);
+    }
+}
+
+/**
+ * 全局通知框
+ */
+export class Notice {
+    static init() {
+        notification.config({
+            placement: 'topRight',
+            duration: 5,
+            style:{color:'red'}
+        });
+    }
+    static open (description) {
+        this.init();
+        notification.open({
+            message: "提示",
+            description: description,
+        });
+    };
 }
