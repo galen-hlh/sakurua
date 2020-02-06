@@ -1,15 +1,25 @@
-import {Component} from 'react'
 import {urlHandler, formDataHandler, errorCodeHandler} from './Helper'
+import cookie from 'react-cookies';
+import {TOKEN_NAME} from "../config/config";
 
-export default class HttpRequest extends Component {
+export default class HttpRequest {
+
+    static headers = {};
+
+    static setTokenHeader() {
+        let token = cookie.load(TOKEN_NAME);
+        if (token) {
+            this.headers['Token'] = token;
+        }
+    }
 
     static get = (url, params = {}, newHeaders = {}) => {
-        let headers = {};
-        Object.assign(headers, newHeaders);
+        this.setTokenHeader();
+        Object.assign(newHeaders, this.headers);
 
         return fetch(urlHandler(url, params), {
             method: 'GET',
-            headers: headers,
+            headers: newHeaders,
         })
             .then((response) => {
 
@@ -24,12 +34,12 @@ export default class HttpRequest extends Component {
     };
 
     static post = (url, params = {}, newHeaders = {}) => {
-        let headers = {};
-        Object.assign(headers, newHeaders);
+        this.setTokenHeader();
+        Object.assign(newHeaders, this.headers);
 
         return fetch(urlHandler(url), {
             method: 'POST',
-            headers: headers,
+            headers: newHeaders,
             body: formDataHandler(params)
         })
             .then((response) => {

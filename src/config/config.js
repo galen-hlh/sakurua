@@ -15,3 +15,9 @@ export const REQUEST_SUCCESS_CODE = 0;
  * @type {number}
  */
 export const USER_NOT_LOGIN_CODE = 10002;
+
+/**
+ * Token名称
+ * @type {string}
+ */
+export const TOKEN_NAME = 'api-token';

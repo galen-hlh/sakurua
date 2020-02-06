@@ -1,36 +1,50 @@
 import React, {Component} from 'react'
 import HttpRequest from "../../helper/HttpRequest";
-import {BASE_URL} from "../../config/config";
+import {BASE_URL, TOKEN_NAME} from "../../config/config";
+import {Button} from 'antd';
+import {Notice} from '../../helper/Notice';
+import cookie from 'react-cookies';
 import "./login.scss";
 
 export default class Login extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             username: '',
             password: '',
+            loading: false
         };
-    }
+    };
 
     login = (event) => {
+        let _this = this;
+        _this.setState({loading: true});
         event.preventDefault();
         let params = {
             username: this.state.username,
             password: this.state.password,
         };
         HttpRequest.post(BASE_URL + "/v1/admin/login", params).then(function (resp) {
+            _this.setState({loading: false});
             if (resp.code === 0) {
-                alert("登录成功")
+                Notice.success("登录成功");
+                let token = resp.data.token;
+                let jwt = JSON.parse(atob(token.split('.')[1]));
+                let date = new Date(jwt['exp'] * 1000);
+                cookie.save(TOKEN_NAME, token, {expires: date});
             }
+        }).catch(function (e) {
+            _this.setState({loading: false});
         });
+
         return false;
-    }
+    };
 
     onChangeValue = (event) => {
         this.setState({
             [event.target.name]: event.target.value
         });
-    }
+    };
 
 
     render() {
@@ -44,7 +58,7 @@ export default class Login extends Component {
                 <div className="main">
                     <h4 className="title">
                         <div className="normal-title">
-                            <a className="active" href="/sign_in">登录</a>
+                            <a className="active">登录</a>
                         </div>
                     </h4>
                     <div className="js-sign-in-container">
@@ -61,10 +75,10 @@ export default class Login extends Component {
                                 <input placeholder="密码" name="password" type="password" onChange={this.onChangeValue}/>
                                 <i className="fa fa-lock"/>
                             </div>
-
-                            <button className="sign-in-button" id="sign-in-form-submit-btn" type="submit">
-                                <span id="sign-in-loading"/>登录
-                            </button>
+                            <Button className="sign-in-button" type="primary" shape="round" loading={this.state.loading}
+                                    htmlType="submit" block>
+                                登录
+                            </Button>
                         </form>
                     </div>
                 </div>
